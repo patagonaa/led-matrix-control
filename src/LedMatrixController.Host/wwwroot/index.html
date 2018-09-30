@@ -1,0 +1,24 @@
+<html>
+
+<head>
+    <script src="lib/signalr/signalr.min.js"></script>
+    <script src="matrixpreview.js"></script>
+    <script src="mixercontrol.js"></script>
+</head>
+
+<body>
+    <canvas id="matrixPreview"></canvas><br />
+
+    <label for="mixerControl">Mixer</label>
+    <input type="range" min="0" max="10" step="1" id="mixerControl"></canvas>
+
+    <script>
+        var matrixPreview = new MatrixPreview(document.getElementById("matrixPreview"), 32, 8, 16);
+        matrixPreview.startListen();
+
+        var mixercontrol = new MixerControl(document.getElementById("mixerControl"));
+        mixercontrol.startListen();
+    </script>
+</body>
+
+</html>

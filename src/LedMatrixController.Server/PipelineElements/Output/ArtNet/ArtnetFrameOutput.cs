@@ -14,7 +14,7 @@ namespace LedMatrixController.Server.Output.ArtNet
             _config = config;
         }
 
-        public async Task Output(Frame frame)
+        public async Task Push(Frame frame)
         {
             foreach (var packet in _config.PatchConfig.GetPackets(frame))
             {
