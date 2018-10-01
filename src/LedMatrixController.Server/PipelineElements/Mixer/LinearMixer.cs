@@ -22,6 +22,9 @@ namespace LedMatrixController.Server.PipelineElements.Mixer
         public async Task<Frame> Pop()
         {
             var frames = await Task.WhenAll(_input1.Pop(), _input2.Pop());
+            FrameHelper.EnsureValid(frames[0], _width, _height);
+            FrameHelper.EnsureValid(frames[1], _width, _height);
+
             var outputPixels = new Color[_width * _height];
 
             for (int i = 0; i < _width * _height; i++)
@@ -29,9 +32,7 @@ namespace LedMatrixController.Server.PipelineElements.Mixer
                 outputPixels[i] = MixColors(frames[0].Pixels[i], frames[1].Pixels[i], _mixerLevel);
             }
 
-            return new Frame{
-                Pixels = outputPixels
-            };
+            return new Frame(_width, _height, outputPixels);
         }
 
         private Color MixColors(Color c1, Color c2, double val){

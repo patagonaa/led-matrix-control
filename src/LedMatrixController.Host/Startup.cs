@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using LedMatrixController.Host.Endpoints.MatrixPreview;
-using LedMatrixController.Host.MixerControl;
+﻿using LedMatrixController.Host.Endpoints.MatrixPreview;
+using LedMatrixController.Host.Endpoints.MixerControl;
 using LedMatrixController.Host.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace LedMatrixController.Host
 {
@@ -33,9 +23,14 @@ namespace LedMatrixController.Host
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddTransient<ServerConfig>(x => new ServerConfig { Width = 32, Height = 8, FrameRate = 30 });
+            services.Configure<ServerConfig>(x =>
+            {
+                x.Width = 32;
+                x.Height = 8;
+                x.FrameRate = 30;
+            });
             services.AddTransient<MatrixPreviewOutput, MatrixPreviewOutput>();
-            
+
             services.AddSingleton<MainMixerControls, MainMixerControls>();
 
             services.AddHostedService<MainService>();

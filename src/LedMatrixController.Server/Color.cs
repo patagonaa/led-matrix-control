@@ -15,8 +15,7 @@ namespace LedMatrixController.Server
 
         public static Color FromHsv(double h, double s, double v)
         {
-            byte r, g, b;
-            ColorHelper.HsvToRgb(h, s, v, out r, out g, out b);
+            ColorHelper.HsvToRgb(h, s, v, out byte r, out byte g, out byte b);
             return new Color(r, g, b);
         }
     }

@@ -27,10 +27,7 @@ namespace LedMatrixController.Server.Effect.Rainbow
             }
 
             _frameNum++;
-            return Task.FromResult(new Frame
-            {
-                Pixels = pixels
-            });
+            return Task.FromResult(new Frame(_config.Width, _config.Height, pixels));
         }
 
         public void Dispose()

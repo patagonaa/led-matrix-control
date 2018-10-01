@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using LedMatrixController.Host.Endpoints.MatrixPreview;
-using LedMatrixController.Host.MixerControl;
+using LedMatrixController.Host.Endpoints.MixerControl;
 using LedMatrixController.Server;
 using LedMatrixController.Server.Effect.FlatColor;
 using LedMatrixController.Server.Effect.Rainbow;
@@ -13,6 +12,7 @@ using LedMatrixController.Server.Output.ArtNet;
 using LedMatrixController.Server.PipelineElements;
 using LedMatrixController.Server.PipelineElements.Mixer;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace LedMatrixController.Host.Server
 {
@@ -26,9 +26,9 @@ namespace LedMatrixController.Host.Server
         private ISource<Frame> _source2;
         private IMixer _mixer;
 
-        public MainService(ServerConfig serverConfig, MatrixPreviewOutput matrixPreviewOutput, MainMixerControls mixerControls)
+        public MainService(IOptions<ServerConfig> serverConfig, MatrixPreviewOutput matrixPreviewOutput, MainMixerControls mixerControls)
         {
-            _serverConfig = serverConfig;
+            _serverConfig = serverConfig.Value;
             _matrixPreviewOutput = matrixPreviewOutput;
             _mixerControls = mixerControls;
         }

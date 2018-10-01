@@ -12,12 +12,12 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "LedMatrixController.Server": {
+    "LedMatrixController.Host": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

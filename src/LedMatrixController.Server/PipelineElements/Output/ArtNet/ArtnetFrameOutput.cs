@@ -1,9 +1,9 @@
-using System;
+using LedMatrixController.Server.PipelineElements;
 using System.Threading.Tasks;
 
 namespace LedMatrixController.Server.Output.ArtNet
 {
-    public class ArtnetFrameOutput : IFrameOutput, IDisposable
+    public class ArtnetFrameOutput : ISink<Frame>
     {
         private ArtnetSender _sender;
         private readonly ArtnetFrameOutputConfig _config;
@@ -16,6 +16,8 @@ namespace LedMatrixController.Server.Output.ArtNet
 
         public async Task Push(Frame frame)
         {
+            FrameHelper.EnsureValid(frame, _config.Width, _config.Height);
+
             foreach (var packet in _config.PatchConfig.GetPackets(frame))
             {
                 await _sender.Send(packet);
