@@ -1,5 +1,6 @@
 # LED Matrix Control
 Todo:
+- Frame width + height; Size validation
 - Add TypeScript
 - Effect Change
 - Effect Queue (with Mixer support)
