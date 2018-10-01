@@ -15,7 +15,8 @@ namespace LedMatrixController.Server.Effect.FlatColor
 
         public Task<Frame> Pop()
         {
-            return Task.FromResult(new Frame { Pixels = Enumerable.Repeat(_config.Color, _config.Width * _config.Height).ToArray() });
+            Color[] pixels = Enumerable.Repeat(_config.Color, _config.Width * _config.Height).ToArray();
+            return Task.FromResult(new Frame(_config.Width, _config.Height, pixels));
         }
 
         public void Dispose()
