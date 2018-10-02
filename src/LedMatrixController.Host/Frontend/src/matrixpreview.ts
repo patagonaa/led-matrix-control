@@ -1,6 +1,6 @@
 import * as signalR from "@aspnet/signalr";
 
-class MatrixPreview {
+export class MatrixPreview {
     private canvasContext: CanvasRenderingContext2D;
     private backgroundCanvasContext: CanvasRenderingContext2D;
     private width: number;

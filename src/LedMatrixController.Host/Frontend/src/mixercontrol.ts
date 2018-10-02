@@ -1,6 +1,6 @@
 import * as signalR from "@aspnet/signalr";
 
-class MixerControl {
+export class MixerControl {
     private mixerControl: HTMLInputElement;
     private connection: signalR.HubConnection;
 

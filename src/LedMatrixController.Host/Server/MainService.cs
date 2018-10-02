@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using LedMatrixController.Host.Endpoints.MatrixPreview;
-using LedMatrixController.Host.MixerControl;
+using LedMatrixController.Host.Endpoints.MixerControl;
 using LedMatrixController.Server;
 using LedMatrixController.Server.Effect.FlatColor;
 using LedMatrixController.Server.Effect.Rainbow;

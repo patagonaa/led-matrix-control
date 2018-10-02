@@ -4,3 +4,5 @@ bin/
 .vscode/
 node_modules/
 src/LedMatrixController.Host/Frontend/dist
+src/LedMatrixController.Host/wwwroot
+*.user
