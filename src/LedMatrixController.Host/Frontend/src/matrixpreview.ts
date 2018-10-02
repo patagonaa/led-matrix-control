@@ -1,5 +1,12 @@
+import * as signalR from "@aspnet/signalr";
+
 class MatrixPreview {
-    constructor(canvasElement, width, height, scale) {
+    private canvasContext: CanvasRenderingContext2D;
+    private backgroundCanvasContext: CanvasRenderingContext2D;
+    private width: number;
+    private height: number;
+    
+    constructor(canvasElement: HTMLCanvasElement, width: number, height: number, scale: number) {
         this.canvasContext = canvasElement.getContext("2d");
         canvasElement.width  = width*scale;
         canvasElement.height = height*scale;
@@ -11,13 +18,11 @@ class MatrixPreview {
         backgroundCanvasElement.height = height;
         this.backgroundCanvasContext = backgroundCanvasElement.getContext("2d");
         
-
         this.width = width;
         this.height = height;
-        this.scale = scale;
     }
 
-    base64ToUint8ClampedArray(base64){
+    base64ToUint8ClampedArray(base64: string){
         var raw = window.atob(base64);
         var rawLength = raw.length;
         var array = new Uint8ClampedArray(new ArrayBuffer(rawLength));
@@ -28,18 +33,18 @@ class MatrixPreview {
         return array;
     }
 
-    startListen() {
+    async startListen() {
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/matrixpreview")
             .configureLogging(signalR.LogLevel.Information)
             .build();
 
-        connection.on("PreviewFrame", (frame) => {
+        connection.on("PreviewFrame", (frame: {imageData: string}) => {
             var imageData = new ImageData(this.base64ToUint8ClampedArray(frame.imageData), this.width, this.height);
             this.backgroundCanvasContext.putImageData(imageData, 0, 0);
             this.canvasContext.drawImage(this.backgroundCanvasContext.canvas, 0, 0);
         });
 
-        connection.start().catch(err => console.error(err.toString()));
+        await connection.start();
     }
 }

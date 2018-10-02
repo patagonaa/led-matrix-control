@@ -1,5 +1,10 @@
+import * as signalR from "@aspnet/signalr";
+
 class MixerControl {
-    constructor(mixerControl) {
+    private mixerControl: HTMLInputElement;
+    private connection: signalR.HubConnection;
+
+    constructor(mixerControl: HTMLInputElement) {
         this.mixerControl = mixerControl;
     }
 
@@ -10,8 +15,8 @@ class MixerControl {
             .build();
         this.connection = connection;
 
-        connection.on("MixerValueUpdated", (value) => {
-            this.mixerControl.value = value * 10;
+        connection.on("MixerValueUpdated", (value: number) => {
+            this.mixerControl.value = (value * 10).toString();
         });
 
         await connection.start();
@@ -19,7 +24,7 @@ class MixerControl {
         this.mixerControl.oninput = (e) => this.mixerValueChanged(e);
     }
 
-    mixerValueChanged(event){
-        this.connection.invoke("UpdateMixerValue", event.target.value / 10);
+    mixerValueChanged(event: Event){
+        this.connection.invoke("UpdateMixerValue", parseInt((event.target as HTMLInputElement).value) / 10);
     }
 }
