@@ -1,4 +1,5 @@
-﻿using LedMatrixController.Host.Endpoints.MatrixPreview;
+﻿using LedMatrixController.Host.Endpoints;
+using LedMatrixController.Host.Endpoints.MatrixPreview;
 using LedMatrixController.Host.Endpoints.MixerControl;
 using LedMatrixController.Host.Server;
 using Microsoft.AspNetCore.Builder;
@@ -31,7 +32,7 @@ namespace LedMatrixController.Host
             });
             services.AddTransient<MatrixPreviewOutput, MatrixPreviewOutput>();
 
-            services.AddSingleton<MainMixerControls, MainMixerControls>();
+            services.AddSingleton<MainMixerControl, MainMixerControl>();
 
             services.AddHostedService<MainService>();
             services.AddSignalR();
@@ -53,7 +54,7 @@ namespace LedMatrixController.Host
             app.UseSignalR(x =>
             {
                 x.MapHub<MatrixPreviewHub>("/matrixpreview");
-                x.MapHub<MixerControlHub>("/mixercontrol");
+                x.MapHub<SliderControlHub<MainMixerControl>>("/slider/mixer");
             });
             app.UseDefaultFiles();
             app.UseStaticFiles();

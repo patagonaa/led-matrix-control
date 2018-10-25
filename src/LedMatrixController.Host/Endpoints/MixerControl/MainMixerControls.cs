@@ -1,9 +1,6 @@
-using System.Reactive.Subjects;
-
 namespace LedMatrixController.Host.Endpoints.MixerControl
 {
-    internal class MainMixerControls
+    internal class MainMixerControl : SliderControl
     {
-        public BehaviorSubject<double> MixerValue { get; } = new BehaviorSubject<double>(0);
     }
 }
