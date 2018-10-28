@@ -25,6 +25,7 @@
     "@types/knockout": "^3.4.59",
     "@types/knockout.mapping": "^2.0.33",
     "knockout": "^3.4.2",
-    "knockout-mapping": "^2.6.0"
+    "knockout-mapping": "^2.6.0",
+    "rxjs": "^6.3.3"
   }
 }

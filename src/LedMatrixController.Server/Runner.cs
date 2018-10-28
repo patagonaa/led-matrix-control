@@ -6,6 +6,7 @@ using LedMatrixController.Server.PipelineElements.Mixer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,9 +29,9 @@ namespace LedMatrixController.Server
 
         private void TestInit(Queue<IQueueElement> queue)
         {
-            var red = new FlatColor(_width, _height, new FlatColorConfig { Color = "FF0000"});
-            var green = new FlatColor(_width, _height, new FlatColorConfig { Color = "00FF00"});
-            var blue = new FlatColor(_width, _height, new FlatColorConfig { Color = "0000FF"});
+            var red = new FlatColor(_width, _height, new BehaviorSubject<FlatColorConfig>(new FlatColorConfig { Color = "FF0000"}));
+            var green = new FlatColor(_width, _height, new BehaviorSubject<FlatColorConfig>(new FlatColorConfig { Color = "00FF00"}));
+            var blue = new FlatColor(_width, _height, new BehaviorSubject<FlatColorConfig>(new FlatColorConfig { Color = "0000FF"}));
             var rainbow = new Rainbow(_width, _height);
             var mixer = new LinearMixer(_width, _height);
             queue.Enqueue(new TransitionQueueElement(red, green, mixer, TimeSpan.FromMilliseconds(1000)));
@@ -59,7 +60,7 @@ namespace LedMatrixController.Server
             var executionQueue = new Queue<IQueueElement>();
             TestInit(executionQueue);
 
-            ISource<Frame> currentSource = new FlatColor(_width, _height, new FlatColorConfig { Color = "000000" });
+            ISource<Frame> currentSource = new FlatColor(_width, _height, new BehaviorSubject<FlatColorConfig>(new FlatColorConfig { Color = "000000" }));
             DateTime elementStartTime = DateTime.UtcNow;
             IQueueElement currentQueueElement = new StaticQueueElement(currentSource, TimeSpan.Zero);
 

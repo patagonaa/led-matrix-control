@@ -1,10 +1,10 @@
 import { MatrixPreview } from "./matrixpreview";
 import { SliderControl } from "./slidercontrol";
 import * as ko from "knockout";
-import { RegisterSimpleEffectComponent } from "./Effects/SimpleEffect/SimpleEffectComponent";
-import { RegisterRainbowSourceComponent } from "./Sources/RainbowSource/RainbowSourceComponent";
-import { RegisterEffectsComponent } from "./Effects/EffectsComponent";
-import { RegisterEffectComponent } from "./Effects/EffectComponent";
+import { RegisterRainbowSourceComponent } from "./Sources/RainbowSourceComponent";
+import { RegisterSourcesComponent } from "./Sources/SourcesComponent";
+import { RegisterFlatColorComponent } from "./Sources/FlatColorComponent";
+import { MainViewModel } from "./MainViewModel";
 
 (() => {
     var matrixPreview = new MatrixPreview(<HTMLCanvasElement>document.getElementById("matrixPreview"), 32, 8, 16);
@@ -15,11 +15,11 @@ import { RegisterEffectComponent } from "./Effects/EffectComponent";
         template: '<input type="range" min="0" max="10" step="1" data-bind="value: value" />'
     });
 
-    RegisterRainbowSourceComponent();
-    RegisterSimpleEffectComponent();
-    RegisterEffectComponent();
-    RegisterEffectsComponent();
+    RegisterSourcesComponent();
 
-    ko.applyBindings();
+    RegisterRainbowSourceComponent();
+    RegisterFlatColorComponent();
+
+    ko.applyBindings(new MainViewModel(), document.body);
 })();
 
