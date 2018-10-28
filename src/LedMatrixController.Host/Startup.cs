@@ -1,7 +1,10 @@
-﻿using LedMatrixController.Host.Endpoints;
+﻿using LedMatrixController.Host.ConfigControllers;
+using LedMatrixController.Host.Endpoints;
 using LedMatrixController.Host.Endpoints.MatrixPreview;
 using LedMatrixController.Host.Endpoints.MixerControl;
+using LedMatrixController.Host.Models;
 using LedMatrixController.Host.Server;
+using LedMatrixController.Server.Config.Source;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +37,9 @@ namespace LedMatrixController.Host
 
             services.AddSingleton<MainMixerControl, MainMixerControl>();
 
+            services.AddSingleton<IDataService<FlatColorConfig>, MemoryDataService<FlatColorConfig>>();
+            services.AddSingleton<IDataService<SourcesModel>, MemoryDataService<SourcesModel>>();
+
             services.AddHostedService<MainService>();
             services.AddSignalR();
         }
@@ -55,6 +61,8 @@ namespace LedMatrixController.Host
             {
                 x.MapHub<MatrixPreviewHub>("/matrixpreview");
                 x.MapHub<SliderControlHub<MainMixerControl>>("/slider/mixer");
+                x.MapHub<ConfigController<FlatColorConfig>>("/FlatColor");
+                x.MapHub<ConfigController<SourcesModel>>("/SourcesList");
             });
             app.UseDefaultFiles();
             app.UseStaticFiles();

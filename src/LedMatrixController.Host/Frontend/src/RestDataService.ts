@@ -1,9 +1,16 @@
 import { Guid } from "./uuidv4";
 
-export class DataService {
+export class RestDataService {
     public static async put<T>(endpoint: string, id: Guid, model: T): Promise<void> {
         let uri = `/api/${endpoint}/${id}`;
-        throw new Error("Method not implemented."); // TODO
+
+        await fetch(uri, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify(model)
+        });
     }
 
     public static async get<T>(endpoint: string, id: Guid): Promise<T> {
@@ -13,6 +20,6 @@ export class DataService {
 
     public static async getList<T>(endpoint: string): Promise<T[]> {
         const response = await fetch(`/api/${endpoint}`);
-        return (await response.json()) as T[]; 
+        return (await response.json()) as T[];
     }
 }

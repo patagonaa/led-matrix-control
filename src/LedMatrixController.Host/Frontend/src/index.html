@@ -1,14 +1,17 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+    <meta charset="UTF-8">
 </head>
 
 <body>
     <canvas id="matrixPreview"></canvas><br />
 
     <label for="mixerControl">Mixer</label>
-    <slider params="control: 'mixer'"></slider>
-    <effects-config></effects-config>
+    <slider params="control: 'mixer'"></slider><br/>
+    <sources-config params="{onSave: onSave}"></sources-config>
+    <button data-bind="click: save">Save</button>
 </body>
 
 </html>

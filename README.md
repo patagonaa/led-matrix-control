@@ -1,6 +1,5 @@
 # LED Matrix Control
 Todo:
-- Add TypeScript
 - Effect Change
 - Effect Queue (with Mixer support)
 - Screen / Video Capture Source

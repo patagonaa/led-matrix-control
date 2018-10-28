@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using LedMatrixController.Server.Config.Source;
 using LedMatrixController.Server.PipelineElements;
@@ -9,13 +11,13 @@ namespace LedMatrixController.Server.Effect.FlatColor
     {
         private readonly int _width;
         private readonly int _height;
-        private readonly FlatColorConfig _config;
+        private volatile FlatColorConfig _config;
 
-        public FlatColor(int width, int height, FlatColorConfig config)
+        public FlatColor(int width, int height, BehaviorSubject<FlatColorConfig> config)
         {
             _width = width;
             _height = height;
-            _config = config;
+            config.Subscribe(Observer.Create<FlatColorConfig>(x => _config = x));
         }
 
         public Task<Frame> Pop()
