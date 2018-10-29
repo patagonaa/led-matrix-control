@@ -1,5 +1,5 @@
 import * as signalR from "@aspnet/signalr";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Guid } from "./uuidv4";
 
 export class SignalRDataService<T extends { id: string }> {

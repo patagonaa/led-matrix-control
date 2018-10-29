@@ -2,10 +2,9 @@ import { AvailableSources } from "./AvailableSources";
 import * as ko from "knockout";
 import "knockout-mapping";
 import { Guid } from "../uuidv4";
-import { Observable } from "rxjs";
 
 class RainbowSourceViewModel {
-    constructor(params: { id: KnockoutObservable<Guid>, onSave: Observable<void> }) {
+    constructor(params: { id: KnockoutObservable<Guid>}) {
     }
 }
 

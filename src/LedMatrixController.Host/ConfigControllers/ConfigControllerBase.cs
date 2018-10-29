@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace LedMatrixController.Host.ConfigControllers
 {
     public class ConfigController<TModel> : Hub
-        where TModel : IHaveId
+        where TModel : class, IHaveId, new()
     {
         private readonly IDataService<TModel> _dataService;
 
@@ -17,7 +17,7 @@ namespace LedMatrixController.Host.ConfigControllers
 
         public Task<TModel> Get(Guid id)
         {
-            return Task.FromResult(_dataService.Get(id));
+            return Task.FromResult(_dataService.Get(id) ?? new TModel() { Id = id });
         }
 
         public Task Save(TModel model)
