@@ -45,6 +45,7 @@ namespace LedMatrixController.Host
             services.AddSingleton<IDataService<FlatColorConfig>, MemoryDataService<FlatColorConfig>>();
             services.AddSingleton<IDataService<SourcesModel>, MemoryDataService<SourcesModel>>();
             services.AddSingleton<IDataService<QueueConfigModel>, MemoryDataService<QueueConfigModel>>();
+            services.AddSingleton<IDataService<ServerConfig>, ServerConfigDataService>();
 
             services.AddSingleton<IQueueElementFactory, QueueElementFactory>();
             services.AddSingleton<ISourceFactory, SourceFactory>();
@@ -79,6 +80,7 @@ namespace LedMatrixController.Host
                 x.MapHub<ConfigController<FlatColorConfig>>("/FlatColor");
                 x.MapHub<ConfigController<SourcesModel>>("/SourcesList");
                 x.MapHub<ConfigController<QueueConfigModel>>("/Queue");
+                x.MapHub<ConfigController<ServerConfig>>("/ServerConfig");
             });
             app.UseDefaultFiles();
             app.UseStaticFiles();

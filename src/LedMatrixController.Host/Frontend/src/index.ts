@@ -6,9 +6,14 @@ import { RegisterSourcesComponent } from "./Sources/SourcesComponent";
 import { RegisterFlatColorComponent } from "./Sources/FlatColorComponent";
 import { RegisterPlaybackQueueComponent } from "./Queue/QueueConfigViewModel";
 import { MainViewModel } from "./MainViewModel";
+import { SignalRDataServiceProvider } from "./SignalRDataService";
+import { ServerConfig } from "./ServerConfig";
 
-(() => {
-    var matrixPreview = new MatrixPreview(<HTMLCanvasElement>document.getElementById("matrixPreview"), 32, 8, 16);
+async function initApp(){
+    var serverConfigProvider = await SignalRDataServiceProvider.get<ServerConfig>("ServerConfig");
+    var serverConfig = await serverConfigProvider.get("00000000-0000-0000-0000-000000000000");
+
+    var matrixPreview = new MatrixPreview(<HTMLCanvasElement>document.getElementById("matrixPreview"), serverConfig.width, serverConfig.height, 8);
     matrixPreview.startListen();
 
     ko.components.register("slider", {
@@ -23,5 +28,6 @@ import { MainViewModel } from "./MainViewModel";
     RegisterFlatColorComponent();
 
     ko.applyBindings(new MainViewModel(), document.body);
-})();
+}
 
+initApp();
