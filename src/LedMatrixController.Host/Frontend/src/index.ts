@@ -4,6 +4,7 @@ import * as ko from "knockout";
 import { RegisterRainbowSourceComponent } from "./Sources/RainbowSourceComponent";
 import { RegisterSourcesComponent } from "./Sources/SourcesComponent";
 import { RegisterFlatColorComponent } from "./Sources/FlatColorComponent";
+import { RegisterPlaybackQueueComponent } from "./Queue/QueueConfigViewModel";
 import { MainViewModel } from "./MainViewModel";
 
 (() => {
@@ -16,6 +17,7 @@ import { MainViewModel } from "./MainViewModel";
     });
 
     RegisterSourcesComponent();
+    RegisterPlaybackQueueComponent();
 
     RegisterRainbowSourceComponent();
     RegisterFlatColorComponent();

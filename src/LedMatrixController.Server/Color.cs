@@ -23,6 +23,11 @@ namespace LedMatrixController.Server
 
         public static Color FromHex(string hexString)
         {
+            if(hexString.Length == 7)
+            {
+                hexString = hexString.Substring(1);
+            }
+
             if (hexString.Length != 6)
                 throw new ArgumentException(hexString);
 

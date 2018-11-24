@@ -6,21 +6,18 @@ namespace LedMatrixController.Server.PipelineElements.Mixer
     public class LinearMixer : IMixer
     {
         private double _mixerLevel = 0;
-        private readonly int _width;
-        private readonly int _height;
+        private readonly IOutputSize _outputSize;
         private ISource<Frame> _input1;
         private ISource<Frame> _input2;
 
-        public LinearMixer(int width, int height)
+        public LinearMixer(IOutputSize outputSize)
         {
-            _width = width;
-            _height = height;
+            _outputSize = outputSize;
         }
 
-        public LinearMixer(int width, int height, ISource<Frame> input1, ISource<Frame> input2)
+        public LinearMixer(IOutputSize outputSize, ISource<Frame> input1, ISource<Frame> input2)
         {
-            _width = width;
-            _height = height;
+            _outputSize = outputSize;
             _input1 = input1 ?? throw new ArgumentNullException(nameof(input1));
             _input2 = input2 ?? throw new ArgumentNullException(nameof(input2));
         }
@@ -32,18 +29,21 @@ namespace LedMatrixController.Server.PipelineElements.Mixer
             if (_input2 == null)
                 throw new ArgumentNullException();
 
+            var width = _outputSize.Width;
+            var height = _outputSize.Height;
+
             var frames = await Task.WhenAll(_input1.Pop(), _input2.Pop());
-            FrameHelper.EnsureValid(frames[0], _width, _height);
-            FrameHelper.EnsureValid(frames[1], _width, _height);
+            FrameHelper.EnsureValid(frames[0], width, height);
+            FrameHelper.EnsureValid(frames[1], width, height);
 
-            var outputPixels = new Color[_width * _height];
+            var outputPixels = new Color[width * height];
 
-            for (int i = 0; i < _width * _height; i++)
+            for (int i = 0; i < width * height; i++)
             {
                 outputPixels[i] = MixColors(frames[0].Pixels[i], frames[1].Pixels[i], _mixerLevel);
             }
 
-            return new Frame(_width, _height, outputPixels);
+            return new Frame(width, height, outputPixels);
         }
 
         private Color MixColors(Color c1, Color c2, double val)

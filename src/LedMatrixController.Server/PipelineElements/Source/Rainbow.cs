@@ -1,35 +1,35 @@
 using System.Threading.Tasks;
-using LedMatrixController.Server.PipelineElements;
 
-namespace LedMatrixController.Server.Effect.Rainbow
+namespace LedMatrixController.Server.PipelineElements.Source
 {
     public class Rainbow : ISource<Frame>
     {
-        private readonly int _height;
-        private readonly int _width;
+        private readonly IOutputSize _outputSize;
         private int _frameNum;
 
-        public Rainbow(int width, int height)
+        public Rainbow(IOutputSize outputSize)
         {
             _frameNum = 0;
-            _width = width;
-            _height = height;
+            _outputSize = outputSize;
         }
 
         public Task<Frame> Pop()
         {
-            var pixels = new Color[_width * _height];
+            var width = _outputSize.Width;
+            var height = _outputSize.Height;
 
-            for (int y = 0; y < _height; y++)
+            var pixels = new Color[width * height];
+
+            for (int y = 0; y < height; y++)
             {
-                for (int x = 0; x < _width; x++)
+                for (int x = 0; x < width; x++)
                 {
-                    pixels[(y * _width) + x] = Color.FromHsv(((double)x / _width) * 360 + ((double)y / _height * 180) + _frameNum * 5, 1, 1);
+                    pixels[(y * width) + x] = Color.FromHsv(((double)x / width) * 360 + ((double)y / height * 180) + _frameNum * 5, 1, 1);
                 }
             }
 
             _frameNum++;
-            return Task.FromResult(new Frame(_width, _height, pixels));
+            return Task.FromResult(new Frame(width, height, pixels));
         }
 
         public void Dispose()

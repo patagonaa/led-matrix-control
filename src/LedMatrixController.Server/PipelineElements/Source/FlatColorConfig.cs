@@ -1,4 +1,4 @@
-﻿namespace LedMatrixController.Server.Config.Source
+﻿namespace LedMatrixController.Server.PipelineElements.Source
 {
     public class FlatColorConfig : SourceConfig
     {

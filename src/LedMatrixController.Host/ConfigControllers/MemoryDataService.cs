@@ -1,4 +1,5 @@
 ﻿using LedMatrixController.Server;
+using LedMatrixController.Server.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace LedMatrixController.Host.ConfigControllers
         public T Get(Guid id)
         {
             return _storage.FirstOrDefault(stored => stored.Id == id);
+        }
+
+        public IList<T> Get()
+        {
+            return _storage;
         }
 
         public IObservable<T> GetUpdateObservable()

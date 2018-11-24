@@ -1,6 +1,8 @@
 ﻿using LedMatrixController.Server;
+using LedMatrixController.Server.Config;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LedMatrixController.Host.ConfigControllers
@@ -20,17 +22,22 @@ namespace LedMatrixController.Host.ConfigControllers
             return Task.FromResult(_dataService.Get(id) ?? new TModel() { Id = id });
         }
 
+        public Task<IList<TModel>> GetList()
+        {
+            return Task.FromResult(_dataService.Get());
+        }
+
         public Task Save(TModel model)
         {
             _dataService.Save(model);
-            Clients.Others.SendAsync("Update", model);
+            Clients.All.SendAsync("Update", model);
             return Task.CompletedTask;
         }
 
         public Task Delete(Guid id)
         {
             _dataService.Delete(id);
-            Clients.Others.SendAsync("Delete", id);
+            Clients.All.SendAsync("Delete", id);
             return Task.CompletedTask;
         }
     }

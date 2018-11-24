@@ -2,21 +2,7 @@ import * as ko from "knockout";
 import { Guid, uuidv4 } from "../uuidv4";
 import { AvailableSources } from "./AvailableSources";
 import { ConfigViewModelBase } from "../ConfigViewModelBase";
-
-interface SourceListEntry {
-    sourceName: KnockoutObservable<string>;
-    configId: KnockoutObservable<Guid>;
-}
-
-class SourcesConfigModel {
-    constructor(id: KnockoutObservable<Guid>){
-        this.id = id;
-        this.sources = ko.observableArray<SourceListEntry>();
-    }
-
-    id: KnockoutObservable<Guid>;
-    sources: KnockoutObservableArray<SourceListEntry>;
-}
+import { SourcesConfigModel, SourceListEntry } from "./SourcesConfigModel";
 
 export class SourcesConfigViewModel extends ConfigViewModelBase<SourcesConfigModel> {
 

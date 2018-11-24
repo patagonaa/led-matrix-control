@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LedMatrixController.Server.Config.Source
+namespace LedMatrixController.Server.PipelineElements.Source
 {
     public abstract class SourceConfig : IHaveId
     {

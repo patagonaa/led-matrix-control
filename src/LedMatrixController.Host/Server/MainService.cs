@@ -1,16 +1,14 @@
 using System;
 using System.Net;
-using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using LedMatrixController.Host.Endpoints.MatrixPreview;
 using LedMatrixController.Host.Endpoints.MixerControl;
 using LedMatrixController.Server;
-using LedMatrixController.Server.Effect.FlatColor;
-using LedMatrixController.Server.Effect.Rainbow;
+using LedMatrixController.Server.Config;
 using LedMatrixController.Server.Output.ArtNet;
-using LedMatrixController.Server.PipelineElements;
-using LedMatrixController.Server.PipelineElements.Mixer;
+using LedMatrixController.Server.Queue;
+using LedMatrixController.Server.Queue.Config;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
@@ -19,54 +17,37 @@ namespace LedMatrixController.Host.Server
     internal class MainService : IHostedService, IDisposable
     {
         private readonly ServerConfig _serverConfig;
+        private readonly IOutputSize _outputSize;
+        private readonly IDataService<QueueConfigModel> _queueConfigService;
         private readonly MatrixPreviewOutput _matrixPreviewOutput;
         private readonly MainMixerControl _mixerControls;
+        private readonly IQueueElementFactory _queueElementFactory;
         private CancellationTokenSource _cts = new CancellationTokenSource();
-        private ISource<Frame> _source1;
-        private ISource<Frame> _source2;
-        private IMixer _mixer;
 
         public MainService(IOptions<ServerConfig> serverConfig,
+            IOutputSize outputSize,
+            IDataService<QueueConfigModel> queueConfigService,
             MatrixPreviewOutput matrixPreviewOutput,
-            MainMixerControl mixerControls)
+            MainMixerControl mixerControls,
+            IQueueElementFactory queueElementFactory)
         {
             _serverConfig = serverConfig.Value;
+            _outputSize = outputSize;
+            _queueConfigService = queueConfigService;
             _matrixPreviewOutput = matrixPreviewOutput;
             _mixerControls = mixerControls;
+            _queueElementFactory = queueElementFactory;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            //Task.Run(() => Main());
-
-            var x = new Runner(_serverConfig.Width, _serverConfig.Height);
+            var x = new Runner(_outputSize, _queueConfigService, _queueElementFactory);
             x.Sinks.Add(_matrixPreviewOutput);
 
             var outputConfig = new ArtnetFrameOutputConfig(_serverConfig.Width, _serverConfig.Height, new ModLedArtnetPatchConfig(_serverConfig.Width, _serverConfig.Height, IPAddress.Parse("192.168.178.229")));
             var sink = new ArtnetFrameOutput(outputConfig);
-            x.Sinks.Add(sink);
+            //x.Sinks.Add(sink);
             return x.Start();
-        }
-
-        public async void Main()
-        {
-            //_source1 = new FlatColor(new FlatColorConfig(_serverConfig.Width, _serverConfig.Height, new Color(255, 0, 255)));
-            //_source2 = new Rainbow(new RainbowConfig(_serverConfig.Width, _serverConfig.Height));
-
-            //_mixer = new LinearMixer(_serverConfig.Width, _serverConfig.Height, _source1, _source2);
-            //_mixerControls.Value.Subscribe(Observer.Create<double>(val => _mixer.SetMixerLevel(val)));
-
-            //var outputConfig = new ArtnetFrameOutputConfig(_serverConfig.Width, _serverConfig.Height, new ModLedArtnetPatchConfig(_serverConfig.Width, _serverConfig.Height, IPAddress.Parse("192.168.178.229")));
-            //var sink = new ArtnetFrameOutput(outputConfig);
-
-            //var token = _cts.Token;
-            //while (!token.IsCancellationRequested)
-            //{
-            //    Console.Write(".");
-            //    var frame = await _mixer.Pop();
-            //    await Task.WhenAll(sink.Push(frame), _matrixPreviewOutput.Push(frame));
-            //    Thread.Sleep(1000 / _serverConfig.FrameRate);
-            //}
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

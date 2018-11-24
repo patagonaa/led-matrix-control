@@ -7,7 +7,7 @@ import { SubscriptionLike } from "rxjs";
 export abstract class ConfigViewModelBase<T extends { id: KnockoutObservable<Guid> }> {
     public model: T;
     dataProvider: SignalRDataService<any>;
-    private subscription: SubscriptionLike;
+    private modelUpdateSubscription: SubscriptionLike;
 
     constructor(model: T, endpoint: string) {
         this.model = model;
@@ -21,22 +21,17 @@ export abstract class ConfigViewModelBase<T extends { id: KnockoutObservable<Gui
     }
 
     private async load(id: Guid): Promise<void> {
-        this.modelUnsubscribe();
         var model = await this.dataProvider.get(id);
-        this.fromJS(model);
+        this.setModel(model);
 
-        if (this.subscription != null) {
-            this.subscription.unsubscribe();
+        if (this.modelUpdateSubscription != null) {
+            this.modelUpdateSubscription.unsubscribe();
         }
 
         var observable = this.dataProvider.observe(id);
-        this.subscription = observable.subscribe(model => {
-            this.modelUnsubscribe();
-            this.fromJS(model);
-            this.modelSubscribe(() => this.save());
+        this.modelUpdateSubscription = observable.subscribe(model => {
+            this.setModel(model);
         });
-
-        this.modelSubscribe(() => this.save());
     }
 
     protected modelSubscriptions: KnockoutSubscription[] = [];
@@ -60,15 +55,17 @@ export abstract class ConfigViewModelBase<T extends { id: KnockoutObservable<Gui
     }
 
     private async save(): Promise<void> {
-        let model = this.toJS();
+        let model = this.getModel();
         await this.dataProvider.save(model);
     }
 
-    protected fromJS(model: any) {
+    protected setModel(model: any) {
+        this.modelUnsubscribe();
         ko.mapping.fromJS(model, {}, this.model);
+        this.modelSubscribe(() => this.save());
     }
 
-    protected toJS(): any {
+    protected getModel(): any {
         let model = this.model;
         return ko.mapping.toJS<any>(model);
     }
